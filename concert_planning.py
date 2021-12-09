@@ -90,6 +90,13 @@ def plan_n_tracks(track_list, concert_premiere_length, n=3, delta=0):
     nb_tracks = len(track_list)
     if nb_tracks < n:
         return False
+    elif nb_tracks == n:
+        return sum(track_list) == concert_premiere_length
+    elif nb_tracks / 2 < n:
+        # For large values of n, it is more efficient to find (nb_tracks - n)
+        # tracks to EXCLUDE from the list.
+        n = nb_tracks - n
+        concert_premiere_length = sum(track_list) - concert_premiere_length
 
     sorted_list = sorted(track_list)
     if sum(sorted_list[:n]) > concert_premiere_length + delta:
@@ -130,6 +137,8 @@ def test():
     assert not plan_3_tracks(track_list, 75, delta=5)
 
     # Test the sanity checks for plan_n_tracks
+    assert plan_n_tracks(track_list, 88, n=7)
+    assert not plan_n_tracks(track_list, 87, n=7)
     assert not plan_n_tracks(track_list, 88, n=8)
     assert not plan_3_tracks(track_list, 8)
     assert not plan_3_tracks(track_list, 300)
@@ -155,11 +164,27 @@ def test():
     assert plan_n_tracks(track_list, 74, n=3, delta=5)
     assert not plan_n_tracks(track_list, 75, n=3, delta=5)
 
+    # Test plan_n_tracks with n=4
+    assert plan_n_tracks(track_list, 71, n=4)
+    assert not plan_n_tracks(track_list, 74, n=4)
+    assert plan_n_tracks(track_list, 74, n=4, delta=5)
+    assert plan_n_tracks(track_list, 14, n=4, delta=5)
+    assert not plan_n_tracks(track_list, 13, n=4, delta=5)
+    assert plan_n_tracks(track_list, 21, n=4, delta=2)
+    assert not plan_n_tracks(track_list, 21, n=4, delta=1)
+
+    # Test plan_n_tracks with n=5
+    assert plan_n_tracks(track_list, 74, n=5)
+    assert not plan_n_tracks(track_list, 28, n=5)
+    assert plan_n_tracks(track_list, 28, n=5, delta=5)
+    assert not plan_n_tracks(track_list, 27, n=5, delta=5)
+
     # Test plan_n_tracks with n=6
     assert plan_n_tracks(track_list, 48, n=6)
     assert not plan_n_tracks(track_list, 68, n=6)
     assert plan_n_tracks(track_list, 68, n=6, delta=5)
     assert not plan_n_tracks(track_list, 67, n=6, delta=5)
+    assert plan_n_tracks(track_list, 90, n=6, delta=5)
 
     print("All tests executed successfully.")
 

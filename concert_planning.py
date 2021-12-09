@@ -1,3 +1,5 @@
+import argparse
+
 def find_value(sorted_list, value, delta=0):
     """Check directly by bisection if sorted_list contains the required value
     (± delta if specified)."""
@@ -189,5 +191,38 @@ def test():
     print("All tests executed successfully.")
 
 
+def main():
+    parser = argparse.ArgumentParser(description="Concert Planner")
+    parser.add_argument(
+        'concert_premiere_length', type=int,
+        help="Planned total length of the concert.",
+    )
+    parser.add_argument(
+        'track_list', metavar='track_length', type=int, nargs='+',
+        help="Length of each individual track."
+    )
+    parser.add_argument(
+        '--n', type=int, metavar='nb_tracks', default=3,
+        help="Number of tracks that will be played during the concert."
+    )
+    parser.add_argument(
+        '--delta', type=int, default=0,
+        help="Maximum tolerated deviation from the concert's planned length."
+    )
+    args = parser.parse_args()
+    
+    if plan_n_tracks(
+        args.track_list,
+        args.concert_premiere_length,
+        n=args.n,
+        delta=args.delta,
+    ):
+        print("OK")
+        return 0
+    else:
+        print("NOK")
+        return 1
+
+
 if __name__ == "__main__":
-    test()
+    main()

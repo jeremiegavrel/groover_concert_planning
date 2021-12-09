@@ -1,5 +1,6 @@
 import argparse
 
+
 def find_value(sorted_list, value, delta=0):
     """Check directly by bisection if sorted_list contains the required value
     (± delta if specified)."""
@@ -45,7 +46,7 @@ def find_sum_of_n_values(sorted_list, target_value, n, lo, hi, delta):
     for i, i_value in enumerate(sorted_list[lo:], lo):
         new_target_value = target_value - i_value
         if find_sum_of_n_values(
-            sorted_list, new_target_value, n - 1, i + 1, hi, delta
+                sorted_list, new_target_value, n - 1, i + 1, hi, delta
         ):
             return True
 
@@ -73,7 +74,7 @@ def plan_3_tracks(track_list, concert_premiere_length, delta=0):
         # lengths sum up to concert_premiere_length (±delta).
         target_length = concert_premiere_length - track_length
         if find_sum_of_2_values(
-            sorted_list, target_length, i + 1, nb_tracks - 1, delta,
+                sorted_list, target_length, i + 1, nb_tracks - 1, delta,
         ):
             return True
 
@@ -210,12 +211,12 @@ def main():
         help="Maximum tolerated deviation from the concert's planned length."
     )
     args = parser.parse_args()
-    
+
     if plan_n_tracks(
-        args.track_list,
-        args.concert_premiere_length,
-        n=args.n,
-        delta=args.delta,
+            args.track_list,
+            args.concert_premiere_length,
+            n=args.n,
+            delta=args.delta,
     ):
         print("OK")
         return 0
